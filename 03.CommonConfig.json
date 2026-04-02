@@ -1,0 +1,17 @@
+{
+  "tables": ["address","city","complaint","country","plan_postpaid","plan_prepaid","staff","subscriber"],
+  "host": "jdbc:postgresql://database-1.cb8emeeye4zw.ap-south-1.rds.amazonaws.com:5432/PROD",
+  "username": "puser",
+  "pwd": "ppassword",
+  "driver": "org.postgresql.Driver",
+  "bronze_layer_path": "s3://glueprojp/bronze_data/",
+  "silver_layer_path": "s3://glueprojp/silver_data/",
+  "gold_layer_path": "s3://glueprojp/gold_data/",
+  "platinum_layer_path": "s3://glueprojp/platinum_data/",
+  "sub_dtl_tgt_tbl": "subscriber_details",
+  "cmp_dtl_tgt_tbl": "complaint_details",
+  "revenue_tbl": "revenue_report"
+}
+
+
+

@@ -1,0 +1,48 @@
+# utils.py
+
+import boto3
+import json
+from pyspark.sql import SparkSession
+
+
+# --- Function to read config from S3 ---
+def read_config_from_s3(s3_path):
+    s3_client = boto3.client("s3")
+    path = s3_path.replace("s3://", "")
+    bucket, key = path.split("/", 1)
+    obj = s3_client.get_object(Bucket=bucket, Key=key)
+    config_data = json.loads(obj['Body'].read())
+    return config_data
+
+# --- Function to read data from RDBMS ---
+def read_data_from_rdbms(spark, host, username, pwd, driver, table_name):
+    df = spark.read.format("jdbc") \
+        .option("url", host) \
+        .option("user", username) \
+        .option("password", pwd) \
+        .option("driver", driver) \
+        .option("dbtable", table_name) \
+        .load()
+    return df
+
+# --- Function to write dataframe to S3 ---
+def write_data_fs(spark, df, path, delim=',', header="true", mode="append"):
+    df.write.format("csv").option("delimiter", delim).option("header", header).mode(mode).save(path)
+    print(f"******************Data successfully written to {path}*************")
+
+
+
+def read_csv(spark,path,delimiter=',',inferschema='false',header='false'):
+    df=spark.read.format("CSV").option("header",header).option("inferschema", inferschema).option("delimiter", delimiter).load(path)
+    return df
+    
+    
+    
+def write_data_parquet_fs(spark,df,path):
+    df.write.format("parquet").save(path)
+    print("Data Successfully return in FS") 
+    
+    
+def read_parquet(spark,path):
+    df=spark.read.format("parquet").load(path)
+    return df
